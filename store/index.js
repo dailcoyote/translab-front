@@ -23,12 +23,8 @@ export const actions = {
     },
     SAVE_USER({state, commit}, user) {
         // commit('SET_USER', {...user})
-        if(!user.uuid) {
-            UserAPI.createUser({...user})
-        }
-        else {
-            UserAPI.updateUser({...user})
-        }
+        if(!user.uuid) UserAPI.createUser({...user})
+        else UserAPI.updateUser({...user})
     }
 }
 
