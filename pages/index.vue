@@ -85,8 +85,16 @@
                     >
                       <v-icon>edit</v-icon>
                     </v-btn>
-                    <v-btn depressed outline icon fab dark color="pink" small 
-                          @click="onRemove(props.item.uuid)">
+                    <v-btn
+                      depressed
+                      outline
+                      icon
+                      fab
+                      dark
+                      color="pink"
+                      small
+                      @click="onRemove(props.item.uuid)"
+                    >
                       <v-icon>delete</v-icon>
                     </v-btn>
                   </td>
@@ -101,16 +109,21 @@
       </v-layout>
     </v-container>
     <user-form></user-form>
+    <snackbar :show="show" :text="snackbarMessage" :color="snackbarColor"></snackbar>
   </div>
 </template>
 
 <script>
 import UserForm from "@/components/UserForm";
+import Snackbar from "@/components/Snackbar";
 import UserAPI from "@/api/users";
+
+import { mapState } from "vuex";
 
 export default {
   components: {
-    UserForm
+    UserForm,
+    Snackbar
   },
   data() {
     return {
@@ -212,6 +225,16 @@ export default {
         return this.complex.columnsSelected.indexOf(head.text) != -1;
       });
     },
+    ...mapState({
+        snackbarMessage(state) {
+          return state.notification.message 
+          ? state.notification.message.substr() : "No info";
+        },
+        snackbarColor(state) {
+          return state.notification.color.substr();
+        },
+        show: state => state.notification.show
+    }),
     users: {
       get() {
         return this.$store.getters.users;

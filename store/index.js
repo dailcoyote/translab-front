@@ -1,4 +1,5 @@
 import UserAPI from "@/api/users";
+import { timeout } from "@/helper";
 
 export const state = () => ({
     form: {
@@ -25,6 +26,11 @@ export const state = () => ({
         limit: 10,
         end: false
     },
+    notification: {
+        message: "",
+        color: "primary",
+        show: false
+    }
 });
 
 export const actions = {
@@ -60,11 +66,18 @@ export const actions = {
     SAVE_USER({ state, commit, dispatch }, user) {
         if (!user.uuid) UserAPI.createUser({ ...user })
         else UserAPI.updateUser({ ...user })
+        dispatch('PUSH_NOTIFICATION', `User ${user.email} saved!`);
         dispatch('LOAD_USERS', true)
     },
-    REMOVE_USER({state, dispatch}, uuid) {
+    REMOVE_USER({ state, dispatch }, uuid) {
         UserAPI.removeUser(uuid);
+        dispatch('PUSH_NOTIFICATION', `User with uuid:${uuid} removed!`);
         dispatch('LOAD_USERS', true);
+    },
+    async PUSH_NOTIFICATION({ commit }, msg) {
+        commit('NOTIFICATION_COMMIT', msg)
+        await timeout(4500);
+        commit('NOTIFICATION_CLEAR')
     }
 }
 
@@ -86,7 +99,7 @@ export const mutations = {
         if (result.users.length) {
             state.users.items = [...state.users.items, ...result.users]; // join
             state.searchFilter.offset =
-            state.searchFilter.offset + state.pagination.limit;
+                state.searchFilter.offset + state.pagination.limit;
         }
     },
     RESET_USERS(state) {
@@ -95,13 +108,6 @@ export const mutations = {
     TOGGLE_FORM(state) {
         state.form.open = !state.form.open;
     },
-    RESET_SEARCH_FILTER(state) {
-        state.searchFilter.offset = 0;
-    },
-    RESET_PAGINATION(state) {
-        state.pagination.offset = 0;
-        state.pagination.end = false;
-    },
     CLEAR_USER(state) {
         for (let key in state.form.user)
             state.form.user[key] = '';
@@ -109,6 +115,21 @@ export const mutations = {
     },
     SET_USER(state, user) {
         state.form.user = user;
+    },
+    RESET_SEARCH_FILTER(state) {
+        state.searchFilter.offset = 0;
+    },
+    RESET_PAGINATION(state) {
+        state.pagination.offset = 0;
+        state.pagination.end = false;
+    },
+    NOTIFICATION_COMMIT(state, msg) {
+        state.notification.message = msg;
+        state.notification.show = true;
+    },
+    NOTIFICATION_CLEAR(state) {
+        state.notification.message = "";
+        state.notification.show = false;
     }
 }
 
