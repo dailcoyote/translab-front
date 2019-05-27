@@ -1,10 +1,12 @@
 import { Users } from "./storage";
+import { timeout } from "@/helper";
 
 const getUserById = (uuid) => {
     return (uuid === undefined) ? Users[0] : Users.find(item => item.uuid === uuid);
 };
 
-const getUsers = (offset = 0, limit) => {
+const getUsers = async (offset = 0, limit) => {
+    await timeout();
     return (limit) ? Users.slice(offset, limit + offset) : Users;
 };
 

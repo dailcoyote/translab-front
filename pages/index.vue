@@ -39,7 +39,7 @@
                   <td>{{ props.item.firstname }}</td>
                   <td>{{ props.item.lastname }}</td>
                   <td>{{ props.item.age }}</td>
-                  <td>{{ props.item.address.country + ',' + props.item.address.city + ',' + props.item.address.street }}</td>
+                  <td>{{ props.item.address.full }}</td>
                   <td>{{ props.item.email }}</td>
                   <td>{{ props.item.phone }}</td>
                   <td>
@@ -55,6 +55,9 @@
             </v-card-text>
           </v-card>
         </v-flex>
+      </v-layout>
+      <v-layout v-if="loading" row wrap align-center justify-center ma-0 pb-4>
+        <v-progress-circular :size="45" color="primary" indeterminate ma-auto></v-progress-circular>
       </v-layout>
     </v-container>
   </div>
@@ -76,6 +79,7 @@ export default {
         end: false
       },
       bottom: false,
+      loading: false,
       complex: {
         selected: [],
         headers: [
@@ -100,7 +104,7 @@ export default {
           },
           {
             text: "Address",
-            value: "address.country+address.city"
+            value: "address.full"
           },
           {
             text: "Email",
@@ -129,9 +133,10 @@ export default {
     });
   },
   methods: {
-    fetchUsers() {
-      if (!this.pagination.end) {
-        const finded = UserAPI.getUsers(
+    async fetchUsers() {
+      if (!this.pagination.end && !this.loading) {
+        this.loading = true;
+        const finded = await UserAPI.getUsers(
           this.pagination.offset,
           this.pagination.limit
         );
@@ -142,9 +147,10 @@ export default {
         } else {
           this.pagination.end = true;
         }
+        this.loading = !this.loading;
       }
     },
-    searchBy(searchStr) {      
+    async searchBy(searchStr) {      
       this.complex.items = [];
       if(!searchStr) return this.fetchUsers();        
       const response = UserAPI.getUsersBySearch(
@@ -156,9 +162,6 @@ export default {
         this.complex.items = [...this.complex.items, ...response.users]; // join
         this.searchFilter.offset =
           this.searchFilter.offset + this.pagination.limit;
-      } else {
-        this.pagination.offset = 0;
-        this.searchFilter.offset = 0;
       }
     },
     bottomVisible() {

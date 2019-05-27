@@ -13,6 +13,7 @@ const Users = [
             'suite': 'Apt. 818',
             'city': 'Carlosshire',
             'country': 'Somalia',
+            'full': 'Somalia,Carlosshire,655 Archibald Groves',
             'zipcode': '10406',
             'geo': {
                 'lat': '-44.6063',
@@ -35,6 +36,7 @@ const Users = [
             'city': 'New Sandrinemouth',
             'state': 'North Dakota',
             'country': 'Reunion',
+            'full': 'Reunion,New Sandrinemouth,281 Tillman Forge',
             'zipcode': '19540-8186',
             'geo': {
                 'lat': '-12.3375',
@@ -57,6 +59,7 @@ const Users = [
             'city': 'Port Mablefurt',
             'state': 'Arkansas',
             'country': 'Netherlands Antilles',
+            'full': 'Netherlands Antilles,Port Mablefurt,706 Padberg Knoll',
             'zipcode': '89975-6584',
             'geo': {
                 'lat': '-42.9187',
@@ -79,6 +82,7 @@ const Users = [
             'city': 'Godfreyburgh',
             'state': 'Montana',
             'country': 'Slovenia',
+            'full': 'Slovenia,Godfreyburgh,9528 Schroeder Track',
             'zipcode': '10220',
             'geo': {
                 'lat': '36.8638',
@@ -101,6 +105,7 @@ const Users = [
             'city': 'Angushaven',
             'state': 'Michigan',
             'country': 'Costa Rica',
+            'full': 'Costa Rica,Angushaven,9046 Allen Ferry',
             'zipcode': '92378-7065',
             'geo': {
                 'lat': '78.1292',
@@ -123,6 +128,7 @@ const Users = [
             'city': 'Baumbachstad',
             'state': 'New Mexico',
             'country': 'Montserrat',
+            'full': 'Montserrat,Baumbachstad,62268 Favian Coves',
             'zipcode': '44440',
             'geo': {
                 'lat': '-34.7835',
@@ -145,6 +151,7 @@ const Users = [
             'city': 'East Preston',
             'state': 'Idaho',
             'country': 'Iceland',
+            'full': 'Iceland,East Preston,8153 Favian Walk',
             'zipcode': '24555',
             'geo': {
                 'lat': '-42.5691',
@@ -167,6 +174,7 @@ const Users = [
             'city': 'Lake Loy',
             'state': 'Rhode Island',
             'country': 'South Africa',
+            'full': 'Rhode Island,Lake Loy,886 Wendy Circles',
             'zipcode': '65261',
             'geo': {
                 'lat': '-58.9245',
@@ -189,6 +197,7 @@ const Users = [
             'city': 'North Camila',
             'state': 'Pennsylvania',
             'country': 'Libyan Arab Jamahiriya',
+            'full': 'Libyan Arab Jamahiriya,North Camila,416 Cathy Spur',
             'zipcode': '31751',
             'geo': {
                 'lat': '64.0673',
@@ -211,6 +220,7 @@ const Users = [
             'city': 'Robertsside',
             'state': 'Texas',
             'country': 'Equatorial Guinea',
+            'full': 'Equatorial Guinea,Robertsside,38372 Mante Glen',
             'zipcode': '86558-7214',
             'geo': {
                 'lat': '-55.0222',
@@ -233,6 +243,7 @@ const Users = [
             'city': 'Port Carrollburgh',
             'state': 'Alaska',
             'country': 'Saint Barthelemy',
+            'full': 'Saint Barthelemy,Port Carrollburgh,185 Florine Spurs',
             'zipcode': '30126',
             'geo': {
                 'lat': '24.0545',
@@ -254,7 +265,8 @@ const Users = [
             'suite': 'Apt. 171',
             'city': 'Wymanland',
             'state': 'Indiana',
-            'country': 'Jersey',
+            'country': 'USA',
+            'full': 'USA,Port Wymanland,643 Arch Mews',
             'zipcode': '73594-9840',
             'geo': {
                 'lat': '-70.9980',
@@ -277,6 +289,7 @@ const Users = [
             'city': 'Bergstromburgh',
             'state': 'Ohio',
             'country': 'Anguilla',
+            'full': 'USA,Port Wymanland,643 Arch Mews',
             'zipcode': '42502-9731',
             'geo': {
                 'lat': '-48.2520',
@@ -299,6 +312,7 @@ const Users = [
             'city': 'Pollyburgh',
             'state': 'Arizona',
             'country': 'Virgin Islands, U.S.',
+            'full': 'USA,Port Wymanland,643 Arch Mews',
             'zipcode': '45048',
             'geo': {
                 'lat': '55.3046',
@@ -321,6 +335,7 @@ const Users = [
             'city': 'Bauchside',
             'state': 'Ohio',
             'country': 'Uganda',
+            'full': 'Uganda,Bauchside,4880 Tanner Mews',
             'zipcode': '11259',
             'geo': {
                 'lat': '11.6209',
@@ -343,6 +358,7 @@ const Users = [
             'city': 'East Lunahaven',
             'state': 'Virginia',
             'country': 'Hungary',
+            'full': 'Hungary,Port East Lunahaven,431 Grimes Common',
             'zipcode': '12012-3038',
             'geo': {
                 'lat': '29.7991',
@@ -365,6 +381,7 @@ const Users = [
             'city': 'Cloydville',
             'state': 'Delaware',
             'country': 'Saint Barthelemy',
+            'full': 'Saint Barthelemy,Cloydville,58581 Guillermo Springs',
             'zipcode': '95633-3394',
             'geo': {
                 'lat': '-57.5740',
@@ -382,11 +399,12 @@ const Users = [
         'phone': '1-489-921-2159 x8655',
         'age': 41,
         'address': {
-            'street': '7868 Windler Dam',
+            'street': '7868 Mira street',
             'suite': 'Suite 876',
-            'city': 'Port Emmetfurt',
-            'state': 'Alabama',
+            'city': 'Minsk',
+            'state': '',
             'country': 'Belarus',
+            'full': 'Belarus,Minsk,7868 Mira street',
             'zipcode': '63739-4581',
             'geo': {
                 'lat': '-28.7166',
@@ -408,6 +426,7 @@ const Users = [
             'city': 'North Toyfort',
             'state': 'Connecticut',
             'country': 'Senegal',
+            'full': 'Senegal,North Toyfort,407 Lemke Mountain',
             'zipcode': '90211-1855',
             'geo': {
                 'lat': '-56.3849',
@@ -430,6 +449,7 @@ const Users = [
             'city': 'Leuschkemouth',
             'state': 'Kentucky',
             'country': 'Dominican Republic',
+            'full': 'Dominican Republic,Leuschkemouth,4018 Willms Turnpike',
             'zipcode': '70964',
             'geo': {
                 'lat': '80.2384',
