@@ -2,8 +2,11 @@
   <div id="pageTable">
     <v-container grid-list-xl fluid>
       <v-layout row wrap>
-        <v-flex sm12>
+        <v-flex sm8>
           <h3>User Datatable</h3>
+        </v-flex>
+        <v-flex sm4>
+          <v-btn color="darken-2" @click="openUserForm()">Add New User</v-btn>
         </v-flex>
         <v-flex lg12>
           <v-card>
@@ -57,16 +60,21 @@
         </v-flex>
       </v-layout>
       <v-layout v-if="loading" row wrap align-center justify-center ma-0 pb-4>
-        <v-progress-circular :size="45" color="primary" indeterminate ma-auto></v-progress-circular>
+        <v-progress-circular :size="40" color="primary" indeterminate ma-auto></v-progress-circular>
       </v-layout>
     </v-container>
+    <user-form></user-form>
   </div>
 </template>
 
 <script>
+import UserForm from "@/components/UserForm";
 import UserAPI from "@/api/users";
+
 export default {
-  components: {},
+  components: {
+    UserForm
+  },
   data() {
     return {
       search: "",
@@ -80,6 +88,7 @@ export default {
       },
       bottom: false,
       loading: false,
+      mounted: false,
       complex: {
         selected: [],
         headers: [
@@ -128,6 +137,7 @@ export default {
     this.fetchUsers();
   },
   mounted() {
+    this.mounted = true;
     window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     });
@@ -150,9 +160,9 @@ export default {
         this.loading = !this.loading;
       }
     },
-    async searchBy(searchStr) {      
+    async searchBy(searchStr) {
       this.complex.items = [];
-      if(!searchStr) return this.fetchUsers();        
+      if (!searchStr) return this.fetchUsers();
       const response = UserAPI.getUsersBySearch(
         searchStr,
         this.searchFilter.offset,
@@ -164,12 +174,20 @@ export default {
           this.searchFilter.offset + this.pagination.limit;
       }
     },
+    openUserForm() {
+      this.$store.commit("TOGGLE_FORM");
+    },
     bottomVisible() {
       const scrollY = window.scrollY;
       const visible = document.documentElement.clientHeight;
       const pageHeight = document.documentElement.scrollHeight;
       const bottomPage = visible + scrollY >= pageHeight;
       return bottomPage || pageHeight < visible;
+    }
+  },
+  computed: {
+    fabBtnStyle() {
+      return "top: 15px; right: 25px;";
     }
   },
   watch: {
