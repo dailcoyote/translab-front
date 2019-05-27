@@ -23,9 +23,6 @@
               <v-btn icon>
                 <v-icon>filter_list</v-icon>
               </v-btn>
-              <!-- <v-btn icon>
-                <v-icon>more_vert</v-icon>
-              </v-btn>-->
               <v-menu
                 offset-y
                 origin="center center"
@@ -70,7 +67,7 @@
                   <td v-if="complex.columnsSelected.indexOf('Email') != -1">{{ props.item.email }}</td>
                   <td v-if="complex.columnsSelected.indexOf('Phone') != -1">{{ props.item.phone }}</td>
                   <td>
-                    <v-btn depressed outline icon fab dark color="primary" small>
+                    <v-btn depressed outline icon fab dark color="primary" small @click="onEdit(props.item.uuid)">
                       <v-icon>edit</v-icon>
                     </v-btn>
                     <v-btn depressed outline icon fab dark color="pink" small>
@@ -207,6 +204,10 @@ export default {
           this.searchFilter.offset + this.pagination.limit;
       }
     },
+    onEdit(uuid) {
+      this.openUserForm();
+      this.$store.dispatch('FETCH_USER', uuid);
+    },
     openUserForm() {
       this.$store.commit("TOGGLE_FORM");
     },
@@ -224,9 +225,6 @@ export default {
         if (head.text === "№" || head.text === "Action") return true;
         return this.complex.columnsSelected.indexOf(head.text) != -1;
       });
-    },
-    fabBtnStyle() {
-      return "top: 15px; right: 25px;";
     }
   },
   watch: {
