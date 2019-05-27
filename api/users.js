@@ -16,6 +16,8 @@ const getUsersBySearch = (searchStr, offset = 0, limit = 10) => {
             return item.firstname.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0 
                 || item.lastname.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
                 || item.email.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
+                || item.phone.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
+                || item.address.full.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
         })
         : []
     return {
