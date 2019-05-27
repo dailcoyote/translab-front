@@ -1,14 +1,9 @@
 <template>
-  <v-app dark>
-   <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
+  <v-app>
+    <v-content>
+      <nuxt/>
     </v-content>
-    <v-footer
-      :fixed="fixed"
-      app
-    >
+    <v-footer app>
       <span>&copy; 2019</span>
     </v-footer>
   </v-app>
@@ -17,7 +12,7 @@
 <script>
 export default {
   data() {
-    return {}
+    return {};
   }
-}
+};
 </script>
