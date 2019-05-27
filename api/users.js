@@ -1,5 +1,5 @@
 import { Users } from "./storage";
-import { timeout } from "@/helper";
+import { timeout, uuid } from "@/helper";
 
 const getUserById = (uuid) => {
     return (uuid === undefined) ? Users[0] : Users.find(item => item.uuid === uuid);
@@ -30,9 +30,26 @@ const getUsersByAge = (ageFrom, ageTo = 100, offset = 0, limit = 10) => {
     }).slice(offset, limit + offset)
 };
 
+const createUser = (user) => {
+    user["uuid"] = uuid();
+    Users.unshift(user);
+    return true;
+}
+
+const updateUser = (user) => {
+    for (let index = 0; index < Users.length; index++) {
+        if(user.uuid === Users[index].uuid){
+            Users[index] = user;
+            break;
+        }        
+    }
+}
+
 export default {
     getUsers,
     getUserById,
     getUsersBySearch,
-    getUsersByAge
+    getUsersByAge,
+    createUser,
+    updateUser
 };

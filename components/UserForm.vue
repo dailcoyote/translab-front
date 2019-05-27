@@ -6,16 +6,12 @@
       </v-card-title>
       <v-divider></v-divider>
       <template>
-        <v-form ref="form">
+        <v-form ref="form" v-model="valid"> 
           <v-card-text>
             <v-container grid-list-md fluid>
               <v-layout row justify-center>
                 <v-flex xs10 md8>
-                  <v-text-field
-                    label="Lastname*"
-                    v-model="user.lastname"
-                    :rules="[rules.required]"
-                  ></v-text-field>
+                  <v-text-field label="Lastname*" v-model="user.lastname" :rules="[rules.required]"></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row justify-center>
@@ -70,7 +66,7 @@
           </v-card-text>
           <v-card-actions class="justify-center">
             <v-btn color="blue darken-1" flat @click="close()">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat :disabled="true">Save</v-btn>
+            <v-btn color="blue darken-1" flat @click="save()" :disabled="!valid">Save</v-btn>
           </v-card-actions>
         </v-form>
       </template>
@@ -85,6 +81,7 @@ export default {
   data() {
     return {
       loading: false,
+      valid: true,
       rules: {
         required: value => !!value || "Required",
         email: value => {
@@ -92,11 +89,11 @@ export default {
           return pattern.test(value) || "Invalid e-mail.";
         },
         age: value => {
-            return parseInt(value) != NaN || "Age must be Number";
+          return parseInt(value) != NaN || "Age must be Number";
         },
         phoneNumber: value => {
-            const pattern = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-/\s\.]?[0-9]{4,6}$/im;
-            return pattern.test(value) || "Invalid phone number.";
+          const pattern = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-/\s\.]?[0-9]{4,6}$/im;
+          return pattern.test(value) || "Invalid phone number.";
         }
       }
     };
@@ -104,11 +101,15 @@ export default {
   methods: {
     reset() {
       this.$refs.form.reset();
-      this.$store.commit("CLEAR_USER_FORM");
+      this.$store.commit("CLEAR_USER");
     },
     close() {
       this.$store.commit("TOGGLE_FORM");
       this.reset();
+    },
+    save() {
+      this.$store.dispatch("SAVE_USER", this.user);
+      this.close();
     }
   },
   computed: {
