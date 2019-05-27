@@ -11,8 +11,9 @@ const getUsers = (offset = 0, limit) => {
 const getUsersBySearch = (searchStr, offset = 0, limit = 10) => {
     const filtered = searchStr
         ? Users.filter(item => {
-            return item.firstname.indexOf(searchStr) >= 0 || item.lastname.indexOf(searchStr) >= 0
-                || item.email.indexOf(searchStr) >= 0
+            return item.firstname.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0 
+                || item.lastname.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
+                || item.email.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
         })
         : []
     return {
