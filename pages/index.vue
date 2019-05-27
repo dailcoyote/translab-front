@@ -53,24 +53,40 @@
             <v-card-text class="pa-0">
               <v-data-table
                 :headers="computedHeaders"
-                :items="complex.items"
+                :items="users.items"
                 class="elevation-1"
                 hide-actions
                 must-sort
               >
                 <template slot="items" slot-scope="props">
                   <td>{{ props.index + 1 }}</td>
-                  <td v-if="complex.columnsSelected.indexOf('Firstname') != -1">{{ props.item.firstname }}</td>
-                  <td v-if="complex.columnsSelected.indexOf('Lastname') != -1">{{ props.item.lastname }}</td>
+                  <td
+                    v-if="complex.columnsSelected.indexOf('Firstname') != -1"
+                  >{{ props.item.firstname }}</td>
+                  <td
+                    v-if="complex.columnsSelected.indexOf('Lastname') != -1"
+                  >{{ props.item.lastname }}</td>
                   <td v-if="complex.columnsSelected.indexOf('Age') != -1">{{ props.item.age }}</td>
-                  <td v-if="complex.columnsSelected.indexOf('Address') != -1">{{ props.item.address.full }}</td>
+                  <td
+                    v-if="complex.columnsSelected.indexOf('Address') != -1"
+                  >{{ props.item.address.full }}</td>
                   <td v-if="complex.columnsSelected.indexOf('Email') != -1">{{ props.item.email }}</td>
                   <td v-if="complex.columnsSelected.indexOf('Phone') != -1">{{ props.item.phone }}</td>
                   <td>
-                    <v-btn depressed outline icon fab dark color="primary" small @click="onEdit(props.item.uuid)">
+                    <v-btn
+                      depressed
+                      outline
+                      icon
+                      fab
+                      dark
+                      color="primary"
+                      small
+                      @click="onEdit(props.item.uuid)"
+                    >
                       <v-icon>edit</v-icon>
                     </v-btn>
-                    <v-btn depressed outline icon fab dark color="pink" small>
+                    <v-btn depressed outline icon fab dark color="pink" small 
+                          @click="onRemove(props.item.uuid)">
                       <v-icon>delete</v-icon>
                     </v-btn>
                   </td>
@@ -80,7 +96,7 @@
           </v-card>
         </v-flex>
       </v-layout>
-      <v-layout v-if="loading" row wrap align-center justify-center ma-0 pb-4>
+      <v-layout v-if="users.loading" row wrap align-center justify-center ma-0 pb-4>
         <v-progress-circular :size="40" color="primary" indeterminate ma-auto></v-progress-circular>
       </v-layout>
     </v-container>
@@ -99,14 +115,6 @@ export default {
   data() {
     return {
       search: "",
-      searchFilter: {
-        offset: 0
-      },
-      pagination: {
-        offset: 0,
-        limit: 10,
-        end: false
-      },
       bottom: false,
       loading: false,
       mounted: false,
@@ -173,40 +181,18 @@ export default {
       });
   },
   methods: {
-    async fetchUsers() {
-      if (!this.pagination.end && !this.loading) {
-        this.loading = true;
-        const finded = await UserAPI.getUsers(
-          this.pagination.offset,
-          this.pagination.limit
-        );
-        if (finded.length) {
-          this.complex.items = [...this.complex.items, ...finded]; // join
-          this.pagination.offset =
-            this.pagination.offset + this.pagination.limit;
-        } else {
-          this.pagination.end = true;
-        }
-        this.loading = !this.loading;
-      }
+    fetchUsers() {
+      this.$store.dispatch("LOAD_USERS");
     },
-    async searchBy(searchStr) {
-      this.complex.items = [];
-      if (!searchStr) return this.fetchUsers();
-      const response = UserAPI.getUsersBySearch(
-        searchStr,
-        this.searchFilter.offset,
-        this.pagination.limit
-      );
-      if (response.users.length) {
-        this.complex.items = [...this.complex.items, ...response.users]; // join
-        this.searchFilter.offset =
-          this.searchFilter.offset + this.pagination.limit;
-      }
+    searchBy(searchStr) {
+      this.$store.dispatch("SEARCH_BY", searchStr);
     },
     onEdit(uuid) {
       this.openUserForm();
-      this.$store.dispatch('FETCH_USER', uuid);
+      this.$store.dispatch("FETCH_USER", uuid);
+    },
+    onRemove(uuid) {
+      this.$store.dispatch("REMOVE_USER", uuid);
     },
     openUserForm() {
       this.$store.commit("TOGGLE_FORM");
@@ -225,13 +211,22 @@ export default {
         if (head.text === "№" || head.text === "Action") return true;
         return this.complex.columnsSelected.indexOf(head.text) != -1;
       });
+    },
+    users: {
+      get() {
+        return this.$store.getters.users;
+      }
+    },
+    pagination: {
+      get() {
+        return this.$store.getters.pagination;
+      }
     }
   },
   watch: {
     search(str) {
-      this.pagination.offset = 0;
-      this.pagination.end = false;
-      this.searchFilter.offset = 0;
+      this.$store.commit("RESET_SEARCH_FILTER");
+      this.$store.commit("RESET_PAGINATION");
       this.searchBy(str);
     },
     bottom(bottom) {

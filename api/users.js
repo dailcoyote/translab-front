@@ -50,11 +50,21 @@ const updateUser = (user) => {
     }
 }
 
+const removeUser = (uuid) => {
+    for (let index = 0; index < Users.length; index++) {
+        if(uuid === Users[index].uuid){            
+            Users.splice(index, 1);
+            break;
+        }        
+    }
+}
+
 export default {
     getUsers,
     getUserById,
     getUsersBySearch,
     getUsersByAge,
     createUser,
-    updateUser
+    updateUser,
+    removeUser
 };
