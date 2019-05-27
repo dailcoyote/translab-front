@@ -70,8 +70,8 @@
           </v-container>          
         </v-card-text>
         <v-card-actions class="justify-center">
-          <v-btn color="blue darken-1" flat @click="close()">Отмена</v-btn>
-          <v-btn color="blue darken-1" flat :disabled="true">Сохранить</v-btn>
+          <v-btn color="blue darken-1" flat @click="close()">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat :disabled="true">Save</v-btn>
         </v-card-actions>
       </template>
     </v-card>
