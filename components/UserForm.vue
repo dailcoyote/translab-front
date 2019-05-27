@@ -10,12 +10,12 @@
           <v-card-text>
             <v-container grid-list-md fluid>
               <v-layout row justify-center>
-                <v-flex xs10 md8>
+                <v-flex xs10 md6>
                   <v-text-field label="Lastname*" v-model="user.lastname" :rules="[rules.required]"></v-text-field>
                 </v-flex>
               </v-layout>
               <v-layout row justify-center>
-                <v-flex xs10 md8>
+                <v-flex xs10 md6>
                   <v-text-field
                     label="Firstname*"
                     v-model="user.firstname"
@@ -25,7 +25,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row justify-center>
-                <v-flex xs10 md8>
+                <v-flex xs10 md6>
                   <v-text-field
                     label="Email*"
                     v-model="user.email"
@@ -35,7 +35,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row justify-center>
-                <v-flex xs10 md8>
+                <v-flex xs10 md6>
                   <v-text-field
                     label="Age*"
                     v-model="user.age"
@@ -47,7 +47,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row justify-center>
-                <v-flex xs10 md8>
+                <v-flex xs10 md6>
                   <v-text-field
                     label="Phone* ex: (###) ### ####"
                     v-model="user.phone"
@@ -58,7 +58,7 @@
                 </v-flex>
               </v-layout>
               <v-layout row justify-center>
-                <v-flex xs10 md8>
+                <v-flex xs10 md6>
                   <v-textarea label="Address" v-model="user.address" color="primary"></v-textarea>
                 </v-flex>
               </v-layout>
