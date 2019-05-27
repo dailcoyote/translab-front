@@ -39,6 +39,11 @@ const createUser = (user) => {
 const updateUser = (user) => {
     for (let index = 0; index < Users.length; index++) {
         if(user.uuid === Users[index].uuid){
+            if(user.address) {
+                user.address = {
+                    full: user.address
+                }
+            }
             Users[index] = user;
             break;
         }        
