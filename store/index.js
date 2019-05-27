@@ -27,8 +27,10 @@ export const mutations = {
     TOGGLE_FORM (state) {
         state.form.open = !state.form.open;
     },
-    RESET_FORM (state, payload) {
-        state.form.user = payload;
+    CLEAR_USER_FORM (state) {
+        for(let key in state.form.user)
+            state.form.user[key] = '';
+        state.form.user = {...state.form.user};
     },
     SET_USER_FORM(state, user) {
         state.form.user = user;

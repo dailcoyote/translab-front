@@ -104,6 +104,7 @@ export default {
   methods: {
     reset() {
       this.$refs.form.reset();
+      this.$store.commit("CLEAR_USER_FORM");
     },
     close() {
       this.$store.commit("TOGGLE_FORM");
