@@ -104,7 +104,7 @@
           </v-card>
         </v-flex>
       </v-layout>
-      <v-layout v-if="users.loading" row wrap align-center justify-center ma-0 pb-4>
+      <v-layout v-show="users.loading" row wrap align-center justify-center ma-0 pb-4>
         <v-progress-circular :size="40" color="primary" indeterminate ma-auto></v-progress-circular>
       </v-layout>
     </v-container>
