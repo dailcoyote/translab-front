@@ -39,11 +39,7 @@ export const actions = {
         user["address"] = typeof user["address"] === 'object' ? user["address"].full : "";
         commit('SET_USER', user)
     },
-    async LOAD_USERS({ state, commit }, newly) {
-        if (newly) {
-            commit('RESET_PAGINATION');
-            commit('RESET_USERS');
-        }
+    async LOAD_USERS({ state, commit }) {
         if (!state.pagination.end && !state.users.loading) {
             commit('USERS_LOAD_INDICATOR');
             const finded = await UserAPI.getUsers(
@@ -54,14 +50,18 @@ export const actions = {
         }
     },
     SEARCH_BY({ state, commit, dispatch }, searchStr) {
-        commit('RESET_USERS')
+        commit('RESET_USERS');
+        commit("RESET_PAGINATION");
         if (!searchStr) return dispatch('LOAD_USERS');
-        const response = UserAPI.getUsersBySearch(
-            searchStr,
-            state.searchFilter.offset,
-            state.pagination.limit
-        );
-        commit('SET_USER_SEARCH_RESULT', response)
+        else {
+            commit('USERS_LOAD_INDICATOR');
+            const response = UserAPI.getUsersBySearch(
+                searchStr,
+                state.pagination.offset,
+                state.pagination.limit
+            );
+            commit('USERS_LOADED', response.users)
+        }
     },
     SAVE_USER({ state, commit, dispatch }, user) {
         if (!user.uuid) UserAPI.createUser({ ...user })
@@ -82,6 +82,9 @@ export const actions = {
 }
 
 export const mutations = {
+    TOGGLE_FORM(state) {
+        state.form.open = !state.form.open;
+    },
     USERS_LOAD_INDICATOR(state) {
         state.users.loading = true;
     },
@@ -95,18 +98,8 @@ export const mutations = {
         }
         state.users.loading = false;
     },
-    SET_USER_SEARCH_RESULT(state, result) {
-        if (result.users.length) {
-            state.users.items = [...state.users.items, ...result.users]; // join
-            state.searchFilter.offset =
-                state.searchFilter.offset + state.pagination.limit;
-        }
-    },
     RESET_USERS(state) {
         state.users.items = [];
-    },
-    TOGGLE_FORM(state) {
-        state.form.open = !state.form.open;
     },
     CLEAR_USER(state) {
         for (let key in state.form.user)
@@ -115,9 +108,6 @@ export const mutations = {
     },
     SET_USER(state, user) {
         state.form.user = user;
-    },
-    RESET_SEARCH_FILTER(state) {
-        state.searchFilter.offset = 0;
     },
     RESET_PAGINATION(state) {
         state.pagination.offset = 0;

@@ -248,8 +248,6 @@ export default {
   },
   watch: {
     search(str) {
-      this.$store.commit("RESET_SEARCH_FILTER");
-      this.$store.commit("RESET_PAGINATION");
       this.searchBy(str);
     },
     bottom(bottom) {
