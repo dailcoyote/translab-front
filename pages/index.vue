@@ -278,7 +278,7 @@ export default {
     closeAgeFilterMenu() {
       this.ageFilter.menu = false;
       this.ageFilter.value = [18, 60];
-      this.$store.dispatch('RESET_SEARCH_FILTER');
+      this.$store.dispatch('RESET_SEARCH_AGE_FILTER');
     },
     onScroll(e) {},
     bottomVisible() {

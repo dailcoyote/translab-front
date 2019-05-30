@@ -74,25 +74,29 @@ export const actions = {
         commit("SET_SEARCH_AGE_INTERVAL", interval);
         dispatch("LOAD_USERS");
     },
-    RESET_SEARCH_FILTER({ state, commit, dispatch }) {
+    RESET_SEARCH_AGE_FILTER({ state, commit, dispatch }) {
         if (state.searchFilter.ageInterval.from
             && state.searchFilter.ageInterval.to) {
             commit('RESET_USERS');
             commit("RESET_PAGINATION");
-            commit("RESET_SEARCH_FILTER");
+            commit("RESET_SEARCH_AGE_FILTER");
             dispatch("LOAD_USERS");
         }
     },
     SAVE_USER({ state, commit, dispatch }, user) {
         if (!user.uuid) UserAPI.createUser({ ...user })
         else UserAPI.updateUser({ ...user })
+        commit('RESET_USERS');
+        commit("RESET_PAGINATION");
+        dispatch('LOAD_USERS');
         dispatch('PUSH_NOTIFICATION', `User ${user.email} saved!`);
-        dispatch('LOAD_USERS', true)
     },
-    REMOVE_USER({ state, dispatch }, uuid) {
+    REMOVE_USER({ state, commit, dispatch }, uuid) {
         UserAPI.removeUser(uuid);
+        commit('RESET_USERS');
+        commit("RESET_PAGINATION");
+        dispatch('LOAD_USERS');
         dispatch('PUSH_NOTIFICATION', `User with uuid:${uuid} removed!`);
-        dispatch('LOAD_USERS', true);
     },
     async PUSH_NOTIFICATION({ commit }, msg) {
         commit('NOTIFICATION_COMMIT', msg)
@@ -136,7 +140,7 @@ export const mutations = {
         state.searchFilter.ageInterval.from = parseInt(interval[0]);
         state.searchFilter.ageInterval.to = parseInt(interval[1]);
     },
-    RESET_SEARCH_FILTER(state) {
+    RESET_SEARCH_AGE_FILTER(state) {
         state.searchFilter.ageInterval.from = undefined;
         state.searchFilter.ageInterval.to = undefined;
     },
