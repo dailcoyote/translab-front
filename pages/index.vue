@@ -188,10 +188,10 @@ export default {
   },
   mounted() {
     this.mounted = true;
-    (this.complex.columnsSelected = [...this.complex.columnsVisible]),
-      window.addEventListener("scroll", () => {
-        this.bottom = this.bottomVisible();
-      });
+    this.complex.columnsSelected = [...this.complex.columnsVisible];
+    window.addEventListener("scroll", () => {
+      this.bottom = this.bottomVisible();
+    });
   },
   methods: {
     fetchUsers() {
@@ -210,6 +210,7 @@ export default {
     openUserForm() {
       this.$store.commit("TOGGLE_FORM");
     },
+    onScroll(e) {},
     bottomVisible() {
       const scrollY = window.scrollY;
       const visible = document.documentElement.clientHeight;
@@ -226,14 +227,15 @@ export default {
       });
     },
     ...mapState({
-        snackbarMessage(state) {
-          return state.notification.message 
-          ? state.notification.message.substr() : "No info";
-        },
-        snackbarColor(state) {
-          return state.notification.color.substr();
-        },
-        show: state => state.notification.show
+      snackbarMessage(state) {
+        return state.notification.message
+          ? state.notification.message.substr()
+          : "No info";
+      },
+      snackbarColor(state) {
+        return state.notification.color.substr();
+      },
+      show: state => state.notification.show
     }),
     users: {
       get() {
