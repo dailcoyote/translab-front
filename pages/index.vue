@@ -20,14 +20,68 @@
                 hide-details
                 class="hidden-sm-and-down"
               ></v-text-field>
-              <v-btn icon>
-                <v-icon>filter_list</v-icon>
-              </v-btn>
+              <!--  FILTER SELECTION -->
+              <v-menu
+                v-model="ageFilter.menu"
+                :close-on-click="false"
+                :close-on-content-click="false"
+                offset-x
+                origin="center center"
+                :nudge-width="350"
+                :nudge-bottom="40"
+                :nudge-left="200"
+                transition="scale-transition"
+              >
+                <template v-slot:activator="{ on }">
+                  <v-btn icon v-on="on">
+                    <v-icon>filter_list</v-icon>
+                  </v-btn>
+                </template>
+
+                <v-card>
+                  <v-list>
+                    <v-list-tile avatar>
+                      <v-list-tile-avatar>
+                         <v-icon>filter_list</v-icon>
+                      </v-list-tile-avatar>
+
+                      <v-list-tile-content>
+                        <v-list-tile-title>Age Filter</v-list-tile-title>
+                      </v-list-tile-content>
+                    </v-list-tile>
+                  </v-list>
+
+                  <v-divider></v-divider>
+
+                  <v-card-text>
+                    <v-layout row justify-center="">
+                      <v-flex sm10 class="mt-4 px-2">
+                        <v-range-slider
+                          v-model="ageFilter.value"
+                          :max="ageFilter.max"
+                          :min="ageFilter.min"
+                          :step="1"
+                          thumb-label="always"
+                          ticks
+                        ></v-range-slider>
+                      </v-flex>
+                    </v-layout>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn flat @click="closeAgeFilterMenu()">Cancel</v-btn>
+                    <v-btn color="primary" flat @click="searchByAgeInterval()">Save</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-menu>
+              <!--  COLUMN SELECTION -->
               <v-menu
                 :close-on-content-click="false"
                 offset-y
                 origin="center center"
-                :nudge-right="140"
+                :nudge-right="20"
                 :nudge-bottom="10"
                 transition="scale-transition"
               >
@@ -128,10 +182,16 @@ export default {
   },
   data() {
     return {
-      search: "",
+      mounted: false,
       bottom: false,
       loading: false,
-      mounted: false,
+      search: "",
+      ageFilter: {
+        menu: false,
+        value: [18, 60],
+        min: 18,
+        max: 60
+      },
       complex: {
         columnsVisible: [
           "Firstname",
@@ -199,7 +259,7 @@ export default {
       this.$store.dispatch("LOAD_USERS");
     },
     searchBy(searchStr) {
-      this.$store.dispatch("SEARCH_BY", searchStr);
+      this.$store.dispatch("SEARCH_BY_TEXT", searchStr);
     },
     onEdit(uuid) {
       this.openUserForm();
@@ -210,6 +270,15 @@ export default {
     },
     openUserForm() {
       this.$store.commit("TOGGLE_FORM");
+    },
+    searchByAgeInterval() {
+      this.ageFilter.menu = false;
+      this.$store.dispatch('SEARCH_BY_AGE_INTERVAL', this.ageFilter.value)
+    },
+    closeAgeFilterMenu() {
+      this.ageFilter.menu = false;
+      this.ageFilter.value = [18, 60];
+      this.$store.dispatch('RESET_SEARCH_FILTER');
     },
     onScroll(e) {},
     bottomVisible() {

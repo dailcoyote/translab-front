@@ -14,26 +14,28 @@ const getUsers = async (offset = 0, limit) => {
     }
 };
 
-const getUsersByFilter = (searchStr, offset = 0, limit = 10) => {
-    const filtered = searchStr
+const getUsersByAge = (items, ageFrom = 18, ageTo = 60) => {
+    return items.filter(item => {
+        return item.age >= ageFrom && item.age <= ageTo
+    })
+};
+
+const getUsersByFilter = ({ searchText, ageInterval }, offset = 0, limit = 10) => {
+    let filtered = searchText
         ? Users.filter(item => {
-            return item.firstname.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0 
-                || item.lastname.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
-                || item.email.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
-                || item.phone.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
-                || item.address.full.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0
-        })
-        : []
+            return item.firstname.toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+                || item.lastname.toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+                || item.email.toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+                || item.phone.toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+                || item.address.full.toLowerCase().indexOf(searchText.toLowerCase()) >= 0
+        }) : Users;
+    if (ageInterval.from && ageInterval.to) {
+        filtered = getUsersByAge(filtered, ageInterval.from, ageInterval.to)
+    }
     return {
         users: filtered.slice(offset, limit + offset),
         count: filtered.length
     }
-};
-
-const getUsersByAge = (ageFrom, ageTo = 100, offset = 0, limit = 10) => {
-    Users.filter(item => {
-        return item.age >= ageFrom && item.age <= ageTo
-    }).slice(offset, limit + offset)
 };
 
 const createUser = (user) => {
@@ -44,24 +46,24 @@ const createUser = (user) => {
 
 const updateUser = (user) => {
     for (let index = 0; index < Users.length; index++) {
-        if(user.uuid === Users[index].uuid){
-            if(user.address) {
+        if (user.uuid === Users[index].uuid) {
+            if (user.address) {
                 user.address = {
                     full: user.address
                 }
             }
             Users[index] = user;
             break;
-        }        
+        }
     }
 }
 
 const removeUser = (uuid) => {
     for (let index = 0; index < Users.length; index++) {
-        if(uuid === Users[index].uuid){            
+        if (uuid === Users[index].uuid) {
             Users.splice(index, 1);
             break;
-        }        
+        }
     }
 }
 

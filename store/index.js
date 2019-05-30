@@ -21,8 +21,8 @@ export const state = () => ({
     searchFilter: {
         searchText: '',
         ageInterval: {
-            from: '',
-            to: ''
+            from: undefined,
+            to: undefined
         }
     },
     pagination: {
@@ -46,24 +46,42 @@ export const actions = {
     async LOAD_USERS({ state, commit }) {
         if (!state.pagination.end && !state.users.loading) {
             commit('USERS_TOGGLE_INDICATOR');
-            const finded = !state.searchFilter.searchText
-                ? await UserAPI.getUsers(
-                    state.pagination.offset,
-                    state.pagination.limit)
-                : UserAPI.getUsersByFilter(
-                    state.searchFilter.searchText,
-                    state.pagination.offset,
-                    state.pagination.limit
-                );
+            const finded =
+                !state.searchFilter.searchText
+                    && !state.searchFilter.ageInterval.from
+                    && !state.searchFilter.ageInterval.to
+                    ? await UserAPI.getUsers(
+                        state.pagination.offset,
+                        state.pagination.limit)
+                    : UserAPI.getUsersByFilter(
+                        state.searchFilter,
+                        state.pagination.offset,
+                        state.pagination.limit
+                    );
             commit('SET_USERS', finded.users);
             commit('USERS_TOGGLE_INDICATOR');
         }
     },
-    SEARCH_BY({ state, commit, dispatch }, searchStr) {
+    SEARCH_BY_TEXT({ state, commit, dispatch }, searchText) {
         commit('RESET_USERS');
         commit("RESET_PAGINATION");
-        commit("SET_SEARCH_FILTER", searchStr);
+        commit("SET_SEARCH_TEXT", searchText);
         dispatch("LOAD_USERS");
+    },
+    SEARCH_BY_AGE_INTERVAL({ state, commit, dispatch }, interval) {
+        commit('RESET_USERS');
+        commit("RESET_PAGINATION");
+        commit("SET_SEARCH_AGE_INTERVAL", interval);
+        dispatch("LOAD_USERS");
+    },
+    RESET_SEARCH_FILTER({ state, commit, dispatch }) {
+        if (state.searchFilter.ageInterval.from
+            && state.searchFilter.ageInterval.to) {
+            commit('RESET_USERS');
+            commit("RESET_PAGINATION");
+            commit("RESET_SEARCH_FILTER");
+            dispatch("LOAD_USERS");
+        }
     },
     SAVE_USER({ state, commit, dispatch }, user) {
         if (!user.uuid) UserAPI.createUser({ ...user })
@@ -111,8 +129,16 @@ export const mutations = {
             state.form.user[key] = '';
         state.form.user = { ...state.form.user };
     },
-    SET_SEARCH_FILTER(state, searchText) {
+    SET_SEARCH_TEXT(state, searchText) {
         state.searchFilter.searchText = searchText;
+    },
+    SET_SEARCH_AGE_INTERVAL(state, interval) {
+        state.searchFilter.ageInterval.from = parseInt(interval[0]);
+        state.searchFilter.ageInterval.to = parseInt(interval[1]);
+    },
+    RESET_SEARCH_FILTER(state) {
+        state.searchFilter.ageInterval.from = undefined;
+        state.searchFilter.ageInterval.to = undefined;
     },
     RESET_PAGINATION(state) {
         state.pagination.offset = 0;
