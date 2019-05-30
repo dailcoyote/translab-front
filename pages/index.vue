@@ -252,7 +252,7 @@ export default {
     },
     bottom(bottom) {
       if (bottom) {
-        if (!this.pagination.end && !this.search) this.fetchUsers();
+        if (!this.pagination.end) this.fetchUsers();
       }
     }
   }

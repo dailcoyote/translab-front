@@ -19,7 +19,11 @@ export const state = () => ({
         items: []
     },
     searchFilter: {
-        offset: 0
+        searchText: '',
+        ageInterval: {
+            from: '',
+            to: ''
+        }
     },
     pagination: {
         offset: 0,
@@ -41,27 +45,25 @@ export const actions = {
     },
     async LOAD_USERS({ state, commit }) {
         if (!state.pagination.end && !state.users.loading) {
-            commit('USERS_LOAD_INDICATOR');
-            const finded = await UserAPI.getUsers(
-                state.pagination.offset,
-                state.pagination.limit
-            );
-            commit('USERS_LOADED', finded)
+            commit('USERS_TOGGLE_INDICATOR');
+            const finded = !state.searchFilter.searchText
+                ? await UserAPI.getUsers(
+                    state.pagination.offset,
+                    state.pagination.limit)
+                : UserAPI.getUsersByFilter(
+                    state.searchFilter.searchText,
+                    state.pagination.offset,
+                    state.pagination.limit
+                );
+            commit('SET_USERS', finded.users);
+            commit('USERS_TOGGLE_INDICATOR');
         }
     },
     SEARCH_BY({ state, commit, dispatch }, searchStr) {
         commit('RESET_USERS');
         commit("RESET_PAGINATION");
-        if (!searchStr) return dispatch('LOAD_USERS');
-        else {
-            commit('USERS_LOAD_INDICATOR');
-            const response = UserAPI.getUsersBySearch(
-                searchStr,
-                state.pagination.offset,
-                state.pagination.limit
-            );
-            commit('USERS_LOADED', response.users)
-        }
+        commit("SET_SEARCH_FILTER", searchStr);
+        dispatch("LOAD_USERS");
     },
     SAVE_USER({ state, commit, dispatch }, user) {
         if (!user.uuid) UserAPI.createUser({ ...user })
@@ -85,29 +87,32 @@ export const mutations = {
     TOGGLE_FORM(state) {
         state.form.open = !state.form.open;
     },
-    USERS_LOAD_INDICATOR(state) {
-        state.users.loading = true;
+    USERS_TOGGLE_INDICATOR(state) {
+        state.users.loading = !state.users.loading;
     },
-    USERS_LOADED(state, users) {
+    SET_USERS(state, users) {
         if (users.length) {
             state.users.items = [...state.users.items, ...users]; // join
             state.pagination.offset =
                 state.pagination.offset + state.pagination.limit;
         } else {
+            state.pagination.offset = 0;
             state.pagination.end = true;
         }
-        state.users.loading = false;
     },
     RESET_USERS(state) {
         state.users.items = [];
+    },
+    SET_USER(state, user) {
+        state.form.user = user;
     },
     CLEAR_USER(state) {
         for (let key in state.form.user)
             state.form.user[key] = '';
         state.form.user = { ...state.form.user };
     },
-    SET_USER(state, user) {
-        state.form.user = user;
+    SET_SEARCH_FILTER(state, searchText) {
+        state.searchFilter.searchText = searchText;
     },
     RESET_PAGINATION(state) {
         state.pagination.offset = 0;

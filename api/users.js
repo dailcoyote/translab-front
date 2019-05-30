@@ -7,10 +7,14 @@ const getUserById = (uuid) => {
 
 const getUsers = async (offset = 0, limit) => {
     await timeout();
-    return (limit) ? Users.slice(offset, limit + offset) : Users;
+    const items = (limit) ? Users.slice(offset, limit + offset) : Users;
+    return {
+        users: items,
+        count: Users.length
+    }
 };
 
-const getUsersBySearch = (searchStr, offset = 0, limit = 10) => {
+const getUsersByFilter = (searchStr, offset = 0, limit = 10) => {
     const filtered = searchStr
         ? Users.filter(item => {
             return item.firstname.toLowerCase().indexOf(searchStr.toLowerCase()) >= 0 
@@ -64,7 +68,7 @@ const removeUser = (uuid) => {
 export default {
     getUsers,
     getUserById,
-    getUsersBySearch,
+    getUsersByFilter,
     getUsersByAge,
     createUser,
     updateUser,
