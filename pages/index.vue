@@ -24,6 +24,7 @@
                 <v-icon>filter_list</v-icon>
               </v-btn>
               <v-menu
+                :close-on-content-click="false"
                 offset-y
                 origin="center center"
                 :nudge-right="140"
