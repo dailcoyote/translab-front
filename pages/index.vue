@@ -316,7 +316,7 @@ export default {
     highlightMatches(prop) {
       if (!prop) return "";
       let text = prop.toString().substr(),
-        startIndx = text.toLowerCase().indexOf(this.search.toLowerCase());
+        startIndx = text.indexOf(this.search);
       if (startIndx >= 0) {
         let matches = text.substr(startIndx, this.search.length),
           spanBlock = `<span style="color:#f49841;font-weight:900;">${matches}</span>`;
