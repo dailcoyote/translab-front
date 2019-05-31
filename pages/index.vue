@@ -20,12 +20,11 @@
                 hide-details
                 class="hidden-sm-and-down"
               ></v-text-field>
-              <v-chip 
+              <v-chip
                 close
                 v-model="ageFilter.chip"
-                @input="onAgeFilterRemove()">
-                  Age Range: {{ageFilter.value[0]}} - {{ageFilter.value[1]}}
-              </v-chip>
+                @input="onAgeFilterRemove()"
+              >Age Range: {{ageFilter.value[0]}} - {{ageFilter.value[1]}}</v-chip>
               <!--  FILTER SELECTION -->
               <v-menu
                 v-model="ageFilter.menu"
@@ -48,7 +47,7 @@
                   <v-list>
                     <v-list-tile avatar>
                       <v-list-tile-avatar>
-                         <v-icon>filter_list</v-icon>
+                        <v-icon>filter_list</v-icon>
                       </v-list-tile-avatar>
 
                       <v-list-tile-content>
@@ -60,7 +59,7 @@
                   <v-divider></v-divider>
 
                   <v-card-text>
-                    <v-layout row justify-center="">
+                    <v-layout row justify-center>
                       <v-flex sm10 class="mt-4 px-2">
                         <v-range-slider
                           v-model="ageFilter.value"
@@ -123,16 +122,28 @@
                   <td>{{ props.index + 1 }}</td>
                   <td
                     v-if="complex.columnsSelected.indexOf('Firstname') != -1"
-                  >{{ props.item.firstname }}</td>
+                    v-html="highlightMatches(props.item.firstname)"
+                  ></td>
                   <td
                     v-if="complex.columnsSelected.indexOf('Lastname') != -1"
-                  >{{ props.item.lastname }}</td>
-                  <td v-if="complex.columnsSelected.indexOf('Age') != -1">{{ props.item.age }}</td>
+                    v-html="highlightMatches(props.item.lastname)"
+                  ></td>
+                  <td
+                    v-if="complex.columnsSelected.indexOf('Age') != -1"
+                    v-html="highlightMatches(props.item.age)"
+                  ></td>
                   <td
                     v-if="complex.columnsSelected.indexOf('Address') != -1"
-                  >{{ props.item.address.full }}</td>
-                  <td v-if="complex.columnsSelected.indexOf('Email') != -1">{{ props.item.email }}</td>
-                  <td v-if="complex.columnsSelected.indexOf('Phone') != -1">{{ props.item.phone }}</td>
+                    v-html="highlightMatches(props.item.address.full)"
+                  ></td>
+                  <td
+                    v-if="complex.columnsSelected.indexOf('Email') != -1"
+                    v-html="highlightMatches(props.item.email)"
+                  ></td>
+                  <td 
+                    v-if="complex.columnsSelected.indexOf('Phone') != -1"
+                    v-html="highlightMatches(props.item.phone)"
+                  ></td>
                   <td>
                     <v-btn
                       depressed
@@ -271,7 +282,7 @@ export default {
     onAgeFilterRemove() {
       this.ageFilter.chip = false;
       this.ageFilter.value = [18, 60];
-      this.$store.dispatch('RESET_SEARCH_AGE_FILTER');
+      this.$store.dispatch("RESET_SEARCH_AGE_FILTER");
     },
     onEdit(uuid) {
       this.openUserForm();
@@ -286,13 +297,13 @@ export default {
     searchByAgeInterval() {
       this.ageFilter.menu = false;
       this.ageFilter.chip = true;
-      this.$store.dispatch('SEARCH_BY_AGE_INTERVAL', this.ageFilter.value)
+      this.$store.dispatch("SEARCH_BY_AGE_INTERVAL", this.ageFilter.value);
     },
     closeAgeFilterMenu() {
       this.ageFilter.menu = false;
       this.ageFilter.chip = false;
       this.ageFilter.value = [18, 60];
-      this.$store.dispatch('RESET_SEARCH_AGE_FILTER');
+      this.$store.dispatch("RESET_SEARCH_AGE_FILTER");
     },
     onScroll(e) {},
     bottomVisible() {
@@ -301,15 +312,20 @@ export default {
       const pageHeight = document.documentElement.scrollHeight;
       const bottomPage = visible + scrollY >= pageHeight;
       return bottomPage || pageHeight < visible;
+    },
+    highlightMatches(prop) {
+      if (!prop) return "";
+      let text = prop.toString().substr(),
+        startIndx = text.toLowerCase().indexOf(this.search.toLowerCase());
+      if (startIndx >= 0) {
+        let matches = text.substr(startIndx, this.search.length),
+          spanBlock = `<span style="color:#f49841;font-weight:900;">${matches}</span>`;
+        text = text.replace(this.search, spanBlock);
+      }
+      return text;
     }
   },
   computed: {
-    computedHeaders() {
-      return this.complex.headers.filter(head => {
-        if (head.text === "№" || head.text === "Action") return true;
-        return this.complex.columnsSelected.indexOf(head.text) != -1;
-      });
-    },
     ...mapState({
       snackbarMessage(state) {
         return state.notification.message
@@ -321,6 +337,12 @@ export default {
       },
       show: state => state.notification.show
     }),
+    computedHeaders() {
+      return this.complex.headers.filter(head => {
+        if (head.text === "№" || head.text === "Action") return true;
+        return this.complex.columnsSelected.indexOf(head.text) != -1;
+      });
+    },
     users: {
       get() {
         return this.$store.getters.users;
