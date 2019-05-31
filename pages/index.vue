@@ -20,6 +20,12 @@
                 hide-details
                 class="hidden-sm-and-down"
               ></v-text-field>
+              <v-chip 
+                close
+                v-model="ageFilter.chip"
+                @input="onAgeFilterRemove()">
+                  Age Range: {{ageFilter.value[0]}} - {{ageFilter.value[1]}}
+              </v-chip>
               <!--  FILTER SELECTION -->
               <v-menu
                 v-model="ageFilter.menu"
@@ -188,6 +194,7 @@ export default {
       search: "",
       ageFilter: {
         menu: false,
+        chip: false,
         value: [18, 60],
         min: 18,
         max: 60
@@ -261,6 +268,11 @@ export default {
     searchBy(searchStr) {
       this.$store.dispatch("SEARCH_BY_TEXT", searchStr);
     },
+    onAgeFilterRemove() {
+      this.ageFilter.chip = false;
+      this.ageFilter.value = [18, 60];
+      this.$store.dispatch('RESET_SEARCH_AGE_FILTER');
+    },
     onEdit(uuid) {
       this.openUserForm();
       this.$store.dispatch("FETCH_USER", uuid);
@@ -273,10 +285,12 @@ export default {
     },
     searchByAgeInterval() {
       this.ageFilter.menu = false;
+      this.ageFilter.chip = true;
       this.$store.dispatch('SEARCH_BY_AGE_INTERVAL', this.ageFilter.value)
     },
     closeAgeFilterMenu() {
       this.ageFilter.menu = false;
+      this.ageFilter.chip = false;
       this.ageFilter.value = [18, 60];
       this.$store.dispatch('RESET_SEARCH_AGE_FILTER');
     },
